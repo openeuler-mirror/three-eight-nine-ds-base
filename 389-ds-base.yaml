@@ -1,0 +1,4 @@
+version_control: github
+src_repo: 389ds/389-ds-base
+tag_prefix: 389-ds-base-
+seperator: .
