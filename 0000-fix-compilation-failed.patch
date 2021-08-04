@@ -1,0 +1,35 @@
+diff -Nur a/ldap/servers/plugins/acl/acl.h b/ldap/servers/plugins/acl/acl.h
+--- a/ldap/servers/plugins/acl/acl.h	2019-10-19 01:12:19.000000000 +0800
++++ b/ldap/servers/plugins/acl/acl.h	2021-08-04 16:43:24.182937500 +0800
+@@ -311,8 +311,8 @@
+ #define ATTR_ACLPB_MAX_SELECTED_ACLS    "nsslapd-aclpb-max-selected-acls"
+ #define DEFAULT_ACLPB_MAX_SELECTED_ACLS 200
+ 
+-int aclpb_max_selected_acls; /* initialized from plugin config entry */
+-int aclpb_max_cache_results; /* initialized from plugin config entry */
++extern int aclpb_max_selected_acls; /* initialized from plugin config entry */
++extern int aclpb_max_cache_results; /* initialized from plugin config entry */
+ 
+ typedef struct result_cache
+ {
+diff -Nur a/ldap/servers/slapd/slap.h b/ldap/servers/slapd/slap.h
+--- a/ldap/servers/slapd/slap.h	2019-11-14 09:00:40.000000000 +0800
++++ b/ldap/servers/slapd/slap.h	2021-08-04 15:57:03.260828000 +0800
+@@ -937,7 +937,7 @@
+     void **elements;   /* array of elements */
+     int element_count; /* number of elements in the array */
+     int alloc_count;   /* number of allocated nodes in the array */
+-} datalist;
++};
+ 
+ /* data available to plugins */
+ typedef struct target_data
+@@ -1739,7 +1739,7 @@
+     int task_refcount;
+     void *origin_plugin;       /* If this is a plugin create task, store the plugin object */
+     PRLock *task_log_lock;     /* To protect task_log to be realloced if it's in use */
+-} slapi_task;
++};
+ /* End of interface to support online tasks **********************************/
+ 
+ /*
