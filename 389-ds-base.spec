@@ -6,13 +6,16 @@ ExcludeArch:   i686
 Name:          389-ds-base
 Summary:       Base 389 Directory Server
 Version:       1.4.0.31
-Release:       2
+Release:       3
 License:       GPLv3+
 URL:           https://www.port389.org
 Source0:       https://releases.pagure.org/389-ds-base/389-ds-base-%{version}.tar.bz2
 Source1:       389-ds-base-git.sh
 Source2:       389-ds-base-devel.README
 Source3:       https://github.com/jemalloc/jemalloc/releases/download/5.2.0/jemalloc-5.2.0.tar.bz2
+
+Patch0:        0000-fix-compilation-failed.patch
+
 BuildRequires: nspr-devel nss-devel >= 3.34 perl-generators openldap-devel libdb-devel cyrus-sasl-devel icu
 BuildRequires: libicu-devel pcre-devel cracklib-devel gcc-c++ net-snmp-devel lm_sensors-devel bzip2-devel
 BuildRequires: zlib-devel openssl-devel pam-devel systemd-units systemd-devel pkgconfig pkgconfig(systemd)
@@ -101,7 +104,7 @@ Documentation for 389 Directory Server.
 %prep
 %autosetup -n 389-ds-base-%{version} -p1
 
-%autosetup -n 389-ds-base-%{version} -T -D -b 3
+%setup -n 389-ds-base-%{version} -T -D -b 3
 
 cp %{SOURCE2} README.devel
 
@@ -344,5 +347,8 @@ exit 0
 %{_mandir}/*/*
 
 %changelog
+* Mon Aug 2 2021 Haiwei Li <lihaiwei8@huawei.com> - 1.4.0.31-3
+- Fix complication failed due to gcc upgrade
+
 * Wed Apr 29 2020 lizhenhua <lizhenhua21@huawei.com> - 1.4.0.31-2
 - Package init
