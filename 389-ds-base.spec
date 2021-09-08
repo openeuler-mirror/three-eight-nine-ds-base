@@ -6,7 +6,7 @@ ExcludeArch:   i686
 Name:          389-ds-base
 Summary:       Base 389 Directory Server
 Version:       1.4.0.31
-Release:       3
+Release:       4
 License:       GPLv3+
 URL:           https://www.port389.org
 Source0:       https://releases.pagure.org/389-ds-base/389-ds-base-%{version}.tar.bz2
@@ -19,7 +19,7 @@ Patch0:        0000-fix-compilation-failed.patch
 BuildRequires: nspr-devel nss-devel >= 3.34 perl-generators openldap-devel libdb-devel cyrus-sasl-devel icu
 BuildRequires: libicu-devel pcre-devel cracklib-devel gcc-c++ net-snmp-devel lm_sensors-devel bzip2-devel
 BuildRequires: zlib-devel openssl-devel pam-devel systemd-units systemd-devel pkgconfig pkgconfig(systemd)
-BuildRequires: pkgconfig(krb5) autoconf automake libtool doxygen libcmocka-devel libevent-devel
+BuildRequires: pkgconfig(krb5) autoconf automake libtool doxygen libcmocka-devel libevent-devel chrpath
 BuildRequires: python%{python3_pkgversion} python%{python3_pkgversion}-devel python%{python3_pkgversion}-setuptools
 BuildRequires: python%{python3_pkgversion}-ldap python%{python3_pkgversion}-six python%{python3_pkgversion}-pyasn1
 BuildRequires: python%{python3_pkgversion}-pyasn1-modules python%{python3_pkgversion}-dateutil
@@ -165,12 +165,23 @@ cp -pa COPYING ../389-ds-base-%{version}/COPYING.jemalloc
 cp -pa README ../389-ds-base-%{version}/README.jemalloc
 cd -
 
+cd  $RPM_BUILD_ROOT/usr
+file `find -type f`| grep -w ELF | awk -F":" '{print $1}' | for i in `xargs`
+do
+  chrpath -d $i
+done
+cd -
+mkdir -p  $RPM_BUILD_ROOT/etc/ld.so.conf.d
+echo "%{_bindir}/%{name}" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
+echo "%{_libdir}/%{name}" >> $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
+
 %check
 if ! make DESTDIR="$RPM_BUILD_ROOT" check; then
   cat ./test-suite.log && false;
 fi
 
 %post
+/sbin/ldconfig
 if [ -n "$DEBUGPOSTTRANS" ] ; then
     output=$DEBUGPOSTTRANS
     output2=${DEBUGPOSTTRANS}.upgrade
@@ -204,6 +215,7 @@ if [ $1 -eq 0 ]; then
 fi
 
 %postun
+/sbin/ldconfig
 if [ $1 = 0 ]; then
   rm -rf /var/run/dirsrv
 fi
@@ -307,6 +319,7 @@ exit 0
 %{_libdir}/dirsrv/bin/
 %exclude %{_libdir}/dirsrv/bin/{jemalloc-config,jemalloc.sh}
 %exclude %{_libdir}/dirsrv/lib/{libjemalloc.a,libjemalloc.so,libjemalloc_pic.a,pkgconfig}
+%config(noreplace) /etc/ld.so.conf.d/*
 
 %files         devel
 %doc LICENSE LICENSE.GPLv3+ LICENSE.openssl
@@ -347,6 +360,9 @@ exit 0
 %{_mandir}/*/*
 
 %changelog
+* Wed Sep 08 2021 chenchen <chen_aka_jan@163.com> - 1.4.0.31-4
+- del rpath from some binaries and bin
+
 * Mon Aug 2 2021 Haiwei Li <lihaiwei8@huawei.com> - 1.4.0.31-3
 - Fix complication failed due to gcc upgrade
 
