@@ -6,7 +6,7 @@ ExcludeArch:   i686
 Name:          389-ds-base
 Summary:       Base 389 Directory Server
 Version:       1.4.0.31
-Release:       4
+Release:       5
 License:       GPLv3+
 URL:           https://www.port389.org
 Source0:       https://releases.pagure.org/389-ds-base/389-ds-base-%{version}.tar.bz2
@@ -15,6 +15,8 @@ Source2:       389-ds-base-devel.README
 Source3:       https://github.com/jemalloc/jemalloc/releases/download/5.2.0/jemalloc-5.2.0.tar.bz2
 
 Patch0:        0000-fix-compilation-failed.patch
+Patch1:        CVE-2021-3652.patch
+Patch2:        CVE-2021-3514.patch
 
 BuildRequires: nspr-devel nss-devel >= 3.34 perl-generators openldap-devel libdb-devel cyrus-sasl-devel icu
 BuildRequires: libicu-devel pcre-devel cracklib-devel gcc-c++ net-snmp-devel lm_sensors-devel bzip2-devel
@@ -360,6 +362,9 @@ exit 0
 %{_mandir}/*/*
 
 %changelog
+* Wed Sep 22 2021 liwu<liwu13@huawei.com> - 1.4.0.31-5
+- fix CVE-2021-3652 CVE-2021-3514
+
 * Wed Sep 08 2021 chenchen <chen_aka_jan@163.com> - 1.4.0.31-4
 - del rpath from some binaries and bin
 
