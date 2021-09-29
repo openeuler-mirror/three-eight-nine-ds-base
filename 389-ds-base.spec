@@ -6,7 +6,7 @@ ExcludeArch:   i686
 Name:          389-ds-base
 Summary:       Base 389 Directory Server
 Version:       1.4.0.31
-Release:       4
+Release:       5
 License:       GPLv3+
 URL:           https://www.port389.org
 Source0:       https://releases.pagure.org/389-ds-base/389-ds-base-%{version}.tar.bz2
@@ -34,7 +34,7 @@ Requires:      policycoreutils-python-utils /usr/sbin/semanage libsemanage-pytho
 Requires:      selinux-policy >= 3.14.1-29 openldap-clients openssl-perl python%{python3_pkgversion}-ldap
 Requires:      nss-tools nss >= 3.34 krb5-libs libevent cyrus-sasl-gssapi cyrus-sasl-md5 cyrus-sasl-plain
 Requires:      libdb-utils perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:      perl-Errno >= 1.23-360 perl-DB_File perl-Archive-Tar cracklib-dicts
+Requires:      perl-Errno >= 1.23-360 perl-DB_File perl-Archive-Tar cracklib-dicts python3-packaging
 %{?systemd_requires}
 
 Provides:      389-ds-base-libs = %{version}-%{release} svrcore = 4.1.4 ldif2ldbm >= 0
@@ -349,6 +349,9 @@ exit 0
 %{_mandir}/*/*
 
 %changelog
+* Wed Sep 29 2021 caodongxia <caodongxia@huawei.com> - 1.4.0.31-5
+- add install require python3-packaging 
+
 * Wed Sep 22 2021 liwu <liwu13@huawei.com> - 1.4.0.31-4
 - fix CVE-2021-3652 CVE-2021-3514
 
