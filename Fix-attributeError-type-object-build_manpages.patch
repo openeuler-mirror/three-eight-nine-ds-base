@@ -1,0 +1,49 @@
+From 7cee0c3184f948ff76a907cac007afc7a303169e Mon Sep 17 00:00:00 2001
+From: Viktor Ashirov <vashirov@redhat.com>
+Date: Tue, 18 Jan 2022 13:24:53 +0100
+Subject: [PATCH] Issue 5115 -  AttributeError: type object 'build_manpages'
+ has no attribute 'build_manpages'
+
+Bug Description:
+Starting from v2.1, argparse-manpage provides methods build_manpages,
+get_build_py_cmd and get_install_cmd in the top-level module.
+This breaks installation of lib389 on systems with the newer version
+of argparse-manpage.
+
+Fix Description:
+Update setup.py to be aware of the module version and import methods
+based on it.
+
+Fixes: https://github.com/389ds/389-ds-base/issues/5115
+
+Reviewed by: @tbordaz, @mreynolds389 (Thanks!)
+---
+src/lib389/setup.py | 8 +++++---
+1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/src/lib389/setup.py b/src/lib389/setup.py
+index ce8b512..3f7947f 100644
+--- a/src/lib389/setup.py
++++ b/src/lib389/setup.py
+@@ -14,7 +14,9 @@
+ 
+ from setuptools import setup, find_packages
+ from os import path
+-from build_manpages import build_manpages
++import build_manpages as bm
++if bm.__version__ < '2.1':
++    from build_manpages import build_manpages as bm
+ from setuptools.command.build_py import build_py
+ from setuptools.command.install import install
+ 
+@@ -85,8 +87,8 @@ setup(
+ 
+     cmdclass={
+         # Dynamically build man pages for cli tools
+-        'build_manpages': build_manpages.build_manpages,
+-        'build_py': build_manpages.get_build_py_cmd(build_py),
++        'build_manpages': bm.build_manpages,
++        'build_py': bm.get_build_py_cmd(build_py),
+     }
+ 
+ )
