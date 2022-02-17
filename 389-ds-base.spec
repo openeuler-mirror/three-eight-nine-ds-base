@@ -6,7 +6,7 @@ ExcludeArch:   i686
 Name:          389-ds-base
 Summary:       Base 389 Directory Server
 Version:       1.4.0.31
-Release:       5
+Release:       6
 License:       GPLv3+
 URL:           https://www.port389.org
 Source0:       https://releases.pagure.org/389-ds-base/389-ds-base-%{version}.tar.bz2
@@ -17,6 +17,7 @@ Source3:       https://github.com/jemalloc/jemalloc/releases/download/5.2.0/jema
 Patch0:        0000-fix-compilation-failed.patch
 Patch1:        CVE-2021-3652.patch
 Patch2:        CVE-2021-3514.patch
+Patch3:        Fix-attributeError-type-object-build_manpages.patch
 
 BuildRequires: nspr-devel nss-devel >= 3.34 perl-generators openldap-devel libdb-devel cyrus-sasl-devel icu
 BuildRequires: libicu-devel pcre-devel cracklib-devel gcc-c++ net-snmp-devel lm_sensors-devel bzip2-devel
@@ -362,6 +363,9 @@ exit 0
 %{_mandir}/*/*
 
 %changelog
+* Tue Feb 15 2022 xu_ping<xuping33@huawei.com> - 1.4.0.31-6
+- Fix attributeError
+
 * Wed Sep 22 2021 liwu<liwu13@huawei.com> - 1.4.0.31-5
 - fix CVE-2021-3652 CVE-2021-3514
 
