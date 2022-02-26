@@ -6,7 +6,7 @@ ExcludeArch:   i686
 Name:          389-ds-base
 Summary:       Base 389 Directory Server
 Version:       1.4.0.31
-Release:       5
+Release:       6
 License:       GPLv3+
 URL:           https://www.port389.org
 Source0:       https://releases.pagure.org/389-ds-base/389-ds-base-%{version}.tar.bz2
@@ -135,6 +135,9 @@ cd -
 for f in "dsconf.8" "dsctl.8" "dsidm.8" "dscreate.8"; do
   sed -i  "1s/\"1\"/\"8\"/" %{_builddir}/389-ds-base-%{version}/src/lib389/man/$f
 done
+%ifarch riscv64
+sed -i "s/openEuler\/openEuler-hardened-ld/generic-hardened-ld/g" %{_builddir}/389-ds-base-%{version}/Makefile
+%endif
 export XCFLAGS=$RPM_OPT_FLAGS
 %make_build
 
@@ -362,6 +365,9 @@ exit 0
 %{_mandir}/*/*
 
 %changelog
+* Sat Feb 26 2022 YukariChiba<i@0x7f.cc> - 1.4.0.31-6
+- Replace openEuler-hardened-ld to avoid link issues on RISC-V
+
 * Wed Sep 22 2021 liwu<liwu13@huawei.com> - 1.4.0.31-5
 - fix CVE-2021-3652 CVE-2021-3514
 
